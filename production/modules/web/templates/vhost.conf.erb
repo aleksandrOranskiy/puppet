@@ -1,0 +1,11 @@
+<VirtualHost *:80>
+  ServerName <%= @hostname %>
+  DocumentRoot <%= @docRoot %>
+
+  <Directory <%= @docRoot -%>>
+    AllowOverride All
+    Order allow,deny
+    Allow From All
+  </Directory>
+
+</VirtualHost>
