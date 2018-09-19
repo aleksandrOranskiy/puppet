@@ -1,0 +1,4 @@
+{
+"service-url": "https://<PUPPET MASTER HOSTNAME>:8170/code-manager"
+}
+

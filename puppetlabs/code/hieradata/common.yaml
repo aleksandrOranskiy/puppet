@@ -1,0 +1,12 @@
+base_url_32: 'http://repo.zabbix.com/zabbix/3.2/rhel/7/$basearch/'
+base_url_34: 'http://repo.zabbix.com/zabbix/3.4/rhel/7/$basearch/'
+base_url_35: 'http://repo.zabbix.com/zabbix/3.5/rhel/7/$basearch/'
+xml: 'http://springdale.math.ias.edu/data/puias/unsupported/7/x86_64//iksemel-1.4-6.sdl7.x86_64.rpm'
+gpgkey: 'http://repo.zabbix.com/RPM-GPG-KEY-ZABBIX-A14FE591'
+zabbix: ['zabbix-server-mysql', 'zabbix-web-mysql']
+db: 'zabbix'
+user: 'zabbix'
+pass: 'zabbixdb'
+port: '10050'
+zabbix_agent_yum: ['zabbix-agent', 'zabbix-sender', 'zabbix-get']
+zabbix_server: '192.168.50.50'

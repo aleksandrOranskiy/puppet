@@ -1,0 +1,81 @@
+class zabbix_server {
+
+  $base_url_32 = 'http://repo.zabbix.com/zabbix/3.2/rhel/7/$basearch/'
+  $base_url_34 = 'http://repo.zabbix.com/zabbix/3.4/rhel/7/$basearch/'
+  $base_url_35 = 'http://repo.zabbix.com/zabbix/3.5/rhel/7/$basearch/'
+  $xml = 'http://springdale.math.ias.edu/data/puias/unsupported/7/x86_64//iksemel-1.4-6.sdl7.x86_64.rpm'
+  $gpgkey = 'http://repo.zabbix.com/RPM-GPG-KEY-ZABBIX-A14FE591'
+  $zabbix = ['zabbix-server-mysql', 'zabbix-web-mysql']
+  $db = 'zabbix'
+  $user = 'zabbix'
+  $pass = 'zabbixdb'
+  $port = '10051'
+
+  file { 'zabbixserver-repo':
+    path    => "/etc/yum.repos.d/zabbix.repo",
+    content => template('zabbix_server/zabbix.repo.erb'),
+  }
+
+  exec { 'install iksemel':
+    unless => "/usr/bin/yum list installed | grep iksemel.x86_64", 
+    command => "/usr/bin/yum install -y ${xml}",
+  }
+
+  package { $zabbix:
+    ensure  => installed,
+    allow_virtual => true,
+    require => [ Exec['install iksemel'], File['zabbixserver-repo'] ], 
+  }
+
+  exec { "create-zabbix-db":
+    unless  => "/usr/bin/mysql -uroot zabbix",
+    command => "/usr/bin/mysql -uroot -e \"create database zabbix; grant all on zabbix.* to zabbix@localhost identified by 'zabbixdb';\"",
+    require => Package[$zabbix],
+  }
+
+  service { 'mariadb':
+    ensure    => 'running',
+    enable    => 'true',
+    subscribe => Exec['create-zabbix-db'],
+  }
+
+  exec { "create tables in zabbix":
+    unless => "/usr/bin/mysql -uzabbix -pzabbixdb -D zabbix -e 'show tables;'",
+    command => "/usr/bin/zcat /usr/share/doc/zabbix-server-mysql-*/create.sql.gz | mysql -uzabbix -pzabbixdb zabbix",
+    require => Exec['create-zabbix-db'],
+  }
+
+  exec { 'set zabbix password':
+    onlyif  => "/usr/bin/test -f /etc/zabbix/zabbix_server.conf",
+    path    => ['/usr/bin', '/usr/sbin'],
+    command => "sed -i -e 's/\(.*\)\(DBPassword=\)\(.*\)/\2zabbixdb/' /etc/zabbix/zabbix_server.conf",
+    require => Package[$zabbix],
+  }
+
+#  file_line { 'zabbix_server_conf':
+#    ensure  => present,
+#    path    => '/etc/zabbix/zabbix_server.conf',
+#    line    => "DBPassword=zabbixdb",
+#    match   => '^.*DBPassword=.*$',
+#    require => Package[$zabbix], 
+#  }
+  
+  file { 'web_conf':
+    path    => "/etc/zabbix/web/zabbix.conf.php",
+    content => template('zabbix_server/web.erb'),
+    require => Package[$zabbix],
+  }
+
+  service { 'zabbix-server':
+    ensure => 'running',
+    enable => 'true',
+    require => File['/etc/zabbix/web/zabbix.conf.php'],
+  }
+
+  exec { 'change timezone':
+    onlyif  => "/usr/bin/test -f /etc/http/conf.d/zabbix.conf",
+    path    => ['/usr/bin', '/usr/sbin'],
+    command => "sed -i -e 's/\(.*\)\(php_value date\.timezone\)\(.*\)/\t\2 Europe\/Minsk/' /etc/httpd/conf.d/zabbix.conf",
+    require => Package[$zabbix],
+  }
+}

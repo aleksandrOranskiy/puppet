@@ -1,0 +1,20 @@
+[zabbix]
+name     = 'Zabbix 3.2 repo'
+baseurl  = <%= @base_url_32 %>
+enabled  = 1
+gpgcheck = 1
+gpgkey   = <%= @gpgkey %>
+
+[zabbix34]
+name     = 'Zabbix 3.4 repo'
+baseurl  = <%= @base_url_34 %>
+enabled  = 0
+gpgcheck = 1
+gpgkey   = <%= @gpgkey %>
+
+[zabbix35]
+name     = 'Zabbix 3.5 repo'
+baseurl  = <%= @base_url_35 %>
+enabled  = 0
+gpgcheck = 1
+gpgkey   = <%= @gpgkey %>

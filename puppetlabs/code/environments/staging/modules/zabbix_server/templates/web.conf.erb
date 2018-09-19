@@ -1,0 +1,17 @@
+<?php
+global $DB;
+
+$DB['TYPE']     = 'MYSQL';
+$DB['SERVER']   = 'localhost';
+$DB['PORT']     = '0';
+$DB['DATABASE'] = <%= @db -%>;
+$DB['USER']     = <%= @user -%>;
+$DB['PASSWORD'] = <%= @pass -%>;
+
+$DB['SCHEMA'] = '';
+
+$ZBX_SERVER      = 'localhost';
+$ZBX_SERVER_PORT = <%= @port -%>;
+$ZBX_SERVER_NAME = 'Zabbix Server';
+
+$IMAGE_FORMAT_DEFAULT = IMAGE_FORMAT_PNG;

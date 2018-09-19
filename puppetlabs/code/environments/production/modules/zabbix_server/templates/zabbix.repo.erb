@@ -1,0 +1,20 @@
+[zabbix]
+name=Zabbix Official Repository - $basearch
+baseurl=<%= @base_url_34 %>
+enabled=1
+gpgcheck=1
+gpgkey=<%= @gpgkey %>
+
+[zabbix32]
+name=Zabbix Official Repository 3.2 - $basearch
+baseurl=<%= @base_url_32 %>
+enabled=0
+gpgcheck=1
+gpgkey=<%= @gpgkey %>
+
+[zabbix35]
+name=Zabbix Official Repository 3.5 - $basearch
+baseurl=<%= @base_url_35 %>
+enabled=0
+gpgcheck=1
+gpgkey=<%= @gpgkey %>

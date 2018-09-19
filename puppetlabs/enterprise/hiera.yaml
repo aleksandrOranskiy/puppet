@@ -1,0 +1,28 @@
+#######################################################################
+# This file is managed by Puppet Enterprise during install and upgrade.
+# Do not modify.
+---
+version: 5
+defaults:  # Used for any hierarchy level that omits these keys.
+  datadir: conf.d        # This path is relative to hiera.yaml's directory.
+  data_hash: hocon_data  # Use the built-in hocon backend.
+
+hierarchy:
+  - name: "Per-node data"                   # Human-readable name.
+    path: "nodes/%{trusted.certname}.conf"  # File path, relative to datadir.
+
+  - name: "Puppet Enterprise configuration"
+    path: "pe.conf"
+
+  - name: "Recovered configuration from classifier and user hieradata"
+    path: "common.conf"
+
+  - name: "Common data from Hiera3 user hieradata"
+    datadir: "/etc/puppetlabs/code/environments/%{environment}/hieradata"
+    data_hash: yaml_data
+    path: "common.yaml"
+
+  - name: "Common data from Hiera5 user data"
+    datadir: "/etc/puppetlabs/code/environments/%{environment}/data"
+    data_hash: yaml_data
+    path: "common.yaml"

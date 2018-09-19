@@ -1,0 +1,59 @@
+<configuration scan="true" scanPeriod="60 seconds">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout -->
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} [%thread] %-5level [%logger{2}] %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="F1" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/log/puppetlabs/console-services/console-services.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/puppetlabs/console-services/console-services-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- each file should be at most 200MB, keep 90 days worth of history, but at most 1GB total-->
+            <maxFileSize>200MB</maxFileSize>
+            <maxHistory>90</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <!-- http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout -->
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} [%thread] %-5level [%logger{2}] %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STATUS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/log/puppetlabs/console-services/console-services-status.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>/var/log/puppetlabs/console-services/console-services-status-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- each file should be at most 200MB, keep 90 days worth of history, but at most 1GB total-->
+            <maxFileSize>200MB</maxFileSize>
+            <maxHistory>90</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <!-- note that this will only log the JSON message (%m) and a newline (%n)-->
+            <pattern>%m%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- without additivity="false", the status log messages will be sent to every other appender as well-->
+    <logger name="puppetlabs.trapperkeeper.services.status.status-debug-logging" level="debug" additivity="false">
+        <appender-ref ref="STATUS"/>
+    </logger>
+
+    <logger name="org.eclipse.jetty" level="INFO"/>
+
+    <logger name="org.apache.shiro" level="WARN"/>
+
+    <!-- Uncomment to log ldap queries -->
+    <!-- <logger name="puppetlabs.rbac.ldap" level="DEBUG"/> -->
+
+    <root level="info">
+        <!--<appender-ref ref="STDOUT"/>-->
+        <appender-ref ref="${logappender:-DUMMY}" />
+        <appender-ref ref="F1"/>
+    </root>
+</configuration>

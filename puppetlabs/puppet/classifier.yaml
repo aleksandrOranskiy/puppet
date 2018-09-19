@@ -1,0 +1,3 @@
+- server: puppet
+  port: 4433
+  prefix: /classifier-api

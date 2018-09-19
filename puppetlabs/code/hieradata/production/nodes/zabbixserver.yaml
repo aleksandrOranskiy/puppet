@@ -1,0 +1,6 @@
+classes:
+  - zabbix_server
+roles:
+  zabbix_server:
+    keyZ: valueZ
+node: server_value

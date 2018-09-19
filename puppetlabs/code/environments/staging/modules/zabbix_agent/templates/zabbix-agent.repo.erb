@@ -1,0 +1,17 @@
+[zabbix3.2]
+baseurl  = <%= @base_url_3_2 %>
+enabled  = 0
+gpgcheck = 1
+gpgkey   = <%= @gpgkey %>
+
+[zabbix3.4]
+baseurl  = <%= @base_url_3_4 %>
+enabled  = 1
+gpgcheck = 1
+gpgkey   = <%= @gpgkey %>
+
+[zabbix3.5]
+baseurl  = <%= @base_url_3_5 %>
+enabled  = 0
+gpgcheck = 1
+gpgkey   = <%= @gpgkey %>

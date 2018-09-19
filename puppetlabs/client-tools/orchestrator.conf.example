@@ -1,0 +1,5 @@
+{
+  "options" : {
+    "service-url": "https://<PUPPET MASTER HOSTNAME>:8143"
+  }
+}
